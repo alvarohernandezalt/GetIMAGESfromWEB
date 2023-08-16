@@ -1,17 +1,18 @@
 import requests
-import io
 import os
-
 from bs4 import BeautifulSoup
 
 
 def search_google_images(query):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+    }
     url = "https://www.google.com/search?q={}".format(query)
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, "html.parser")
 
-    image_results = soup.find_all("img", class_="rg_i")
-    image_urls = [image["src"] for image in image_results]
+    image_results = soup.find_all("img", class_="t0fcAb")
+    image_urls = [image["src"] for image in image_results if "src" in image.attrs]
 
     return image_urls
 
