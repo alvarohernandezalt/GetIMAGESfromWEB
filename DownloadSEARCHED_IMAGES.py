@@ -1,19 +1,17 @@
-import requests
 import os
-from bs4 import BeautifulSoup
+import requests
+
+API_KEY = "YOUR_GOOGLE_API_KEY"
+SEARCH_ENGINE_ID = "YOUR_SEARCH_ENGINE_ID"
 
 
 def search_google_images(query):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
-    }
-    url = "https://www.google.com/search?q={}".format(query)
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.content, "html.parser")
+    url = f"https://www.googleapis.com/customsearch/v1"
+    params = {"key": API_KEY, "cx": SEARCH_ENGINE_ID, "q": query, "searchType": "image"}
+    response = requests.get(url, params=params)
+    data = response.json()
 
-    image_results = soup.find_all("img", class_="t0fcAb")
-    image_urls = [image["src"] for image in image_results if "src" in image.attrs]
-
+    image_urls = [item["link"] for item in data.get("items", [])]
     return image_urls
 
 
@@ -26,7 +24,7 @@ def download_images(image_urls, output_directory):
         if i == num_images:
             break
 
-        image_name = image_url.split("/")[-1]
+        image_name = os.path.basename(image_url)
         image_path = os.path.join(output_directory, image_name)
 
         response = requests.get(image_url)
