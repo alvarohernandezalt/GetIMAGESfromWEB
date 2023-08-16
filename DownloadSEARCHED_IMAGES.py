@@ -20,7 +20,11 @@ def download_images(image_urls, output_directory):
     if not os.path.exists(output_directory):
         os.mkdir(output_directory)
 
-    for image_url in image_urls:
+    num_images = 3
+    for i, image_url in enumerate(image_urls):
+        if i == num_images:
+            break
+
         image_name = image_url.split("/")[-1]
         image_path = os.path.join(output_directory, image_name)
 
