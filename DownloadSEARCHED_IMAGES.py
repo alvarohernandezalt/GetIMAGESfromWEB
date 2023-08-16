@@ -30,8 +30,8 @@ def download_images(image_urls, output_directory):
 
 
 def main():
-    query = "Aalto House"
-    output_directory = "aalto_house_images"
+    query = input("Enter the query: ")
+    output_directory = query.replace(" ", "_")
 
     image_urls = search_google_images(query)
     download_images(image_urls, output_directory)
